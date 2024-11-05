@@ -21,18 +21,11 @@
     function payWithPaystack() {
       let email = getParameterByName('email');
       let amount = getParameterByName('amount');
-      let pass = getParameterByName('pass');
-
-      // Use the pass parameter for validation or other purposes
-      if (pass !== 'yourExpectedPassword') {
-        alert("Invalid pass parameter.");
-        return;
-      }
 
       let handler = PaystackPop.setup({
         key: 'pk_test_5023fcec74cf5c596ffe1109e23d68cc789d7e22', // Replace with your public key
         email: email || 'default@email.com', // Default email if not provided in URL
-        amount: amount ? parseInt(amount) * 100 : (100 * 100), // Convert amount to kobo
+        amount: amount || (100*100), // Default amount if not provided in URL
         currency: 'GHS',
         ref: ''+Math.floor((Math.random() * 1000000000) + 1),
         onClose: function(){
