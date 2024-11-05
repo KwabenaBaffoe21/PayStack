@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Studyssey - Pay Fees</title>
+</head>
+<body>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    // Function to get URL parameters
+    function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    // Function to handle payment with Paystack
+    function payWithPaystack() {
+      let email = getParameterByName('email');
+      let amount = getParameterByName('amount');
+      let pass = getParameterByName('pass');
+
+      // Use the pass parameter for validation or other purposes
+      if (pass !== 'yourExpectedPassword') {
+        alert("Invalid pass parameter.");
+        return;
+      }
+
+      let handler = PaystackPop.setup({
+        key: 'pk_test_5023fcec74cf5c596ffe1109e23d68cc789d7e22', // Replace with your public key
+        email: email || 'default@email.com', // Default email if not provided in URL
+        amount: amount ? parseInt(amount) * 100 : (100 * 100), // Convert amount to kobo
+        currency: 'GHS',
+        ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+        onClose: function(){
+          alert('Window closed.');
+        },
+        callback: function(response){
+          let message = 'Payment complete! Reference: ' + response.reference;
+          alert(message);
+        }
+      });
+
+      handler.openIframe();
+    }
+
+    // Call the payWithPaystack function when the page loads
+    window.onload = payWithPaystack;
+  </script>
+</body>
+</html>
